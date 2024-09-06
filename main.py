@@ -38,7 +38,7 @@ def main(url = str):
     if not os.path.isdir("docs"):
         os.mkdir("docs")
     
-    md2pdf(filename, markdown_content)
+    md2pdf(filename, markdown_content, css_file_path="./styles/markdown.css")
     shutil.move(filename, f"docs/{filename}")
 
     click.echo("Your article has been saved as a PDF.")
