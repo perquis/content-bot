@@ -1,31 +1,52 @@
+import os
+import time
+
 import click
 from html2text import HTML2Text
+from tqdm import tqdm
 
+import prompts
 import utils
 
 
 @click.command()
-@click.option('--url', prompt='Medium URL', help='The URL must be from the medium.com domain.')
-def main(url = str):
-    html2text = HTML2Text()
-    scraped_page = utils.use_scraped_page(url)
+def main():
+    """
+    This is a CLI tool that scrapes an article 
+    from medium.com and saves it as a PDF or 
+    Markdown file.
+    """
+    url = prompts.url
+    extensions = prompts.extensions
+    confirm = prompts.confirm
 
-    article = utils.update_dom(scraped_page.find('article'))
+    if not confirm:
+        return
+    
+    with tqdm(total=100, desc="Processing", unit="%", ncols=100) as pbar:
+        html2text = HTML2Text()
+        scraped_page = utils.use_scraped_page(url)
+        
+        pbar.update(13)
 
-    title = article.find('h1').get_text()
-    filename = utils.create_filename(title)
+        article = utils.update_dom(scraped_page.find('article'))
+        title = article.find('h1').get_text()
+        filename = utils.create_unique_name_file(title, extensions)
+        title = html2text.handle(title)
+        text = html2text.handle(str(article))
+        text = utils.split_text(text)
+        markdown_content = utils.concat_content([f"# {title}", text])
 
-    title = html2text.handle(title)
-    text = html2text.handle(str(article))
+        time.sleep(0.5)
+        pbar.update(34)
 
-    text = utils.split_text(text)
-    markdown_content = utils.concat_content([f"# {title}", text])
+        utils.create_file(filename, markdown_content)
 
-    utils.create_pdf(filename, markdown_content)
-    click.echo("Your article has been saved as a PDF.")
+        time.sleep(0.5)
+        pbar.update(53)
 
+    path = os.path.join(os.getcwd(), "docs", filename)
+    click.echo(f"Your article has been saved here: {path}.")
 
 if __name__ == '__main__':
-    click.echo(click.style("Welcome to our Briefify CLI Tool!", fg='cyan'))
-
     main()

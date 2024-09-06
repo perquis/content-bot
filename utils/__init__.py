@@ -8,17 +8,22 @@ from bs4 import BeautifulSoup
 from md2pdf.core import md2pdf
 
 
-def create_filename(title: str) -> str:
+def create_unique_name_file(title: str, extensions) -> str:
     converted_title = title.strip().replace("/", "-").replace(" ", "-").replace(":", "-")
     hashed_filename = str(uuid4())
-    return converted_title + "." + hashed_filename + ".pdf"
+    return converted_title + "." + hashed_filename + f".{extensions}"
 
 
-def create_pdf(filename: str, markdown_content: str) -> None:
+def create_file(filename: str, markdown_content: str) -> None:
     if not os.path.isdir("docs"):
         os.mkdir("docs")
     
-    md2pdf(filename, markdown_content, css_file_path="./styles/markdown.css")
+    if filename.endswith(".pdf"):
+        md2pdf(filename, markdown_content, css_file_path="./styles/markdown.css")
+    elif filename.endswith(".md"):
+        with open(filename, "w", encoding="utf-8") as file:
+            file.write(markdown_content)
+
     shutil.move(filename, f"docs/{filename}")
 
 
