@@ -3,8 +3,10 @@ import time
 
 import click
 from html2text import HTML2Text
+from openai import OpenAI
 from tqdm import tqdm
 
+import instructions
 import prompts
 import utils
 
@@ -18,11 +20,8 @@ def main():
     """
     url = prompts.url
     extensions = prompts.extensions
-    confirm = prompts.confirm
+    chatgpt = OpenAI(api_key=prompts.OPENAI_API_KEY)
 
-    if not confirm:
-        return
-    
     with tqdm(total=100, desc="Processing", unit="%", ncols=100) as pbar:
         html2text = HTML2Text()
         scraped_page = utils.use_scraped_page(url)
@@ -40,13 +39,28 @@ def main():
         time.sleep(0.5)
         pbar.update(34)
 
+        response = chatgpt.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": instructions.copywriter},
+                {"role": "user", "content": markdown_content},
+            ],
+            temperature=0.5,
+        )
+
+        markdown_content = response.choices[0].message.content
+
+        time.sleep(0.5)
+        pbar.update(25)
+
         utils.create_file(filename, markdown_content)
 
         time.sleep(0.5)
-        pbar.update(53)
+        pbar.update(28)
 
     path = os.path.join(os.getcwd(), "docs", filename)
     click.echo(f"Your article has been saved here: {path}.")
+
 
 if __name__ == '__main__':
     main()

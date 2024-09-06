@@ -1,15 +1,27 @@
 from setuptools import setup
 
 setup(
-  name="briefify",
+  name="contentbot",
   version="0.0.1",
-  py_modules=["main"],
+  py_modules=[
+    "main",
+    "instructions",
+    "prompts",
+    "utils"
+    ],
   install_requires=[
-        'Click',
+        "Click",
+        "html2text",
+        "InquirerPy",
+        "openai",
+        "python-dotenv",
+        "requests",
+        "tqdm"
   ],
   entry_points={
       'console_scripts': [
-          'briefify = main:main'
+          'contentbot = main:main',
+          'cbot = main:main'
       ]
   }
 )
