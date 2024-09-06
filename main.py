@@ -10,16 +10,7 @@ def main(url = str):
     html2text = HTML2Text()
     scraped_page = utils.use_scraped_page(url)
 
-    article = scraped_page.find('article')
-    pictures = article.find_all('picture')
-
-    for picture in pictures:
-        source = picture.find('source')
-
-        if source:
-            img_url = source['srcset'].split(' ')[0]
-
-            picture.replace_with(f"![image]({img_url})")
+    article = utils.update_dom(scraped_page.find('article'))
 
     title = article.find('h1').get_text()
     filename = utils.create_filename(title)

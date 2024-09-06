@@ -45,3 +45,17 @@ def split_text(text: str) -> str:
 
 def concat_content(args: list[str]) -> str:
     return "\n\n".join(args)
+
+
+def update_dom(article: BeautifulSoup) -> BeautifulSoup:
+    pictures = article.find_all('picture')
+
+    for picture in pictures:
+        source = picture.find('source')
+
+        if source:
+            img_url = source['srcset'].split(' ')[0]
+
+            picture.replace_with(f"![image]({img_url})")
+
+    return article
