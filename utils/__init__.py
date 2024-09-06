@@ -32,3 +32,16 @@ def use_scraped_page(url: str) -> BeautifulSoup:
         return
 
     return BeautifulSoup(raw_html, 'html.parser')
+
+
+def split_text(text: str) -> str:
+    try:
+        text = text.split("Share")[1]
+        return text
+    except IndexError:
+        click.echo(click.style("The article could not be processed. Please try again.", fg='red'))
+        return
+    
+
+def concat_content(args: list[str]) -> str:
+    return "\n\n".join(args)
