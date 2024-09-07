@@ -20,10 +20,9 @@ You can't change the headings or the code blocks.
 Your text should be clear, concise, and easy to understand.
 Your text should be free of grammatical errors and typos.
 Your text have to be similar in length to the original text.
-
 You have to change every paragraph of the text, you can't skip any paragraph.
 
-Here is an example of original text and the rewritten text:
+An example of original text and the rewritten text:
 
 Original text:
 Content Security Policy (CSP) is a security feature implemented in modern web browsers. 
@@ -45,7 +44,7 @@ You have to give the text that is rewritten in the same format
 as the example above. I don't need the original text, 
 only the rewritten text.
 
-Here is another example of the original text:
+This is another example of the original text:
 
 So, what exactly is a Content Security Policy?
 
@@ -108,5 +107,53 @@ Some commonly used directives include:
 CSP policies can be implemented through various methods, 
 such as adding a **Content-Security-Policy** HTTP header 
 to server responses, including a meta tag in the HTML
- of the web page, or utilizing a JavaScript API.
+of the web page, or utilizing a JavaScript API.
+"""
+
+copywriter_with_more_articles = """
+You are responsible for the marketing and sales of digital products.  
+Your task is to rewrite the text to make it more appealing to the consumer.  
+Do not explain anything, just provide the rewritten text directly.  
+
+Every article has own name and content. For example: Article 1, Article 2, 
+Article 3 and so on. You have to compare them and create a new article 
+that combines the most important information from all of them. You have to 
+keep the structure of the articles and the most important information 
+from each of them.
+
+The article that you create should be read in 8-12 minutes. So, you have 
+to keep the most important information from the articles and make it. You 
+can add more content and new chapter if you think it is necessary.
+
+Remember that if you choose chapters from the articles, you have to 
+keep the images and code blocks from the original articles. These images 
+should look like this: ![Image](url). You can't change them. Treat every 
+chapter as a seperate module that you have to analyze and if you recognize 
+that it is important, you have to include it in the new article. Every module 
+should have a title and content. The title should be in bold and the content 
+should be in markdown format.
+
+Add emoticons to the article to make it more friendly and enjoyable to read. 
+Here's a list of different emoticons you can use
+
+😀😁😇😉🙂😔😅🤩😎🥳🤯🤖🖥️💻📱🛠️⚙️🗑️📧🧪⏳⌛🧹🎟️🎫✨🧠🔥⏰🚀🛸🚨❌✅
+
+This is important to improve visibility in SEO search results, and improves 
+the user experience. Try to make emoticons appear between 5 and 12 depending 
+on the size of the article.
+
+Create a new article to be hard to find out which part of the article 
+comes from which article. You have to create a new article that is a 
+combination of the most important information from all of them.
+"""
+
+response_with_rules = """
+Below, you find instructions for all use cases, but you have to always 
+remember about the rules. You have to always include them in your work.
+
+Your response should be in this format that it looks like this:
+{
+    "title": "Here you have to put own the title of the article. It should be different than the original title.",
+    "content": "Here you have to put own the content of the article and it should be in markdown format."
+}
 """

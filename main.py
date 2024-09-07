@@ -1,66 +1,70 @@
+# build-in modules
 import os
-import time
 
+# third-party modules
 import click
-from html2text import HTML2Text
-from openai import OpenAI
-from tqdm import tqdm
+from dotenv import load_dotenv
+from InquirerPy import inquirer
 
-import instructions
-import prompts
-import utils
+from src import controller
+
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 
 @click.command()
-def main():
+@click.option(
+    '--url',
+    '-u',
+    help='Medium.com URL',
+    multiple=True,
+    default=[]
+)
+@click.option(
+    '--md',
+    '-m',
+    help='Save as Markdown',
+    is_flag=True,
+    default=False
+)
+@click.option(
+    '--pdf',
+    '-p',
+    help='Save as PDF',
+    is_flag=True,
+    default=False
+)
+def main(url: list[str], md, pdf):
     """
-    This is a CLI tool that scrapes an article 
-    from medium.com and saves it as a PDF or 
+    This is a CLI tool that scrapes an article
+    from medium.com and saves it as a PDF or
     Markdown file.
     """
-    url = prompts.url
-    extensions = prompts.extensions
-    chatgpt = OpenAI(api_key=prompts.OPENAI_API_KEY)
+    urls = list(url)
+    
+    if len(url) == 0:
+        medium_com_url = inquirer.text(message="Enter a medium.com URL:").execute()
+        urls.append(medium_com_url)
 
-    with tqdm(total=100, desc="Processing", unit="%", ncols=100) as pbar:
-        html2text = HTML2Text()
-        scraped_page = utils.use_scraped_page(url)
-        
-        pbar.update(13)
+        confirm = inquirer.confirm(message="Do you want to add more articles?", default=True).execute()
 
-        article = utils.update_dom(scraped_page.find('article'))
-        title = article.find('h1').get_text()
-        filename = utils.create_unique_name_file(title, extensions)
-        title = html2text.handle(title)
-        text = html2text.handle(str(article))
-        text = utils.split_text(text)
-        markdown_content = utils.concat_content([f"# {title}", text])
+        while confirm:
+            new_medium_com_url = inquirer.text(message="Enter a medium.com URL:").execute()
+            urls.append(new_medium_com_url)
+            confirm = inquirer.confirm(message="Do you want to add more articles?", default=True).execute()
 
-        time.sleep(0.5)
-        pbar.update(34)
+    extensions = ""
 
-        response = chatgpt.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": instructions.copywriter},
-                {"role": "user", "content": markdown_content},
-            ],
-            temperature=0.5,
-        )
+    if md:
+        extensions = "md"
+    elif pdf:
+        extensions = "pdf"
+    else:
+        extensions = inquirer.select(message="Choose a file format:", choices=['pdf', 'md']).execute()
 
-        markdown_content = response.choices[0].message.content
-
-        time.sleep(0.5)
-        pbar.update(25)
-
-        utils.create_file(filename, markdown_content)
-
-        time.sleep(0.5)
-        pbar.update(28)
-
-    path = os.path.join(os.getcwd(), "docs", filename)
-    click.echo(f"Your article has been saved here: {path}.")
+    controller.content_bot(urls, extensions, OPENAI_API_KEY)
 
 
 if __name__ == '__main__':
-    main()
+    main(url=[], md=False, pdf=False)

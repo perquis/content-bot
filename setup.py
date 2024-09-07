@@ -7,7 +7,8 @@ setup(
     "main",
     "instructions",
     "prompts",
-    "utils"
+    "utils",
+    "models"
     ],
   install_requires=[
         "Click",
@@ -16,7 +17,8 @@ setup(
         "openai",
         "python-dotenv",
         "requests",
-        "tqdm"
+        "tqdm",
+        "md2pdf"
   ],
   entry_points={
       'console_scripts': [
