@@ -2,6 +2,8 @@
 
 If you need a tool for generating blog articles, download and install **ContentBot** now. This amazing tool will help you create an engaging blog packed with tons of interesting content.
 
+https://github.com/user-attachments/assets/ec49764d-eba6-4c74-a3ca-cb00e810192f
+
 ## When to use it?
 
 Here's a list of use cases:
